@@ -1,55 +1,46 @@
 # Selon Toi
 
-Application web pour jouer à deux : chacun répond en secret à un « Tu préfères… », puis tente de deviner ce que l’autre préfère.
+Application web pour jouer à deux : chacun répond en secret, puis tente de deviner ce que l’autre préfère.
 
-## Fonctionnalités
+## Stockage
 
-- Inscription / connexion
-- Rooms à **2 personnes** max, via code d’invitation
-- Phases : choix secret → guess partenaire → révélation
+Pas de base de données. Tout est en fichiers JSON :
+
+- [`src/data/questions.json`](src/data/questions.json) — 100 questions (statique)
+- [`data/users.json`](data/users.json) — comptes
+- [`data/rooms.json`](data/rooms.json) — rooms, questions en cours, réponses
 
 ## Démarrage local
 
 ```bash
 npm install
-npx prisma migrate dev
 npm run dev
 ```
 
-Ouvre [http://localhost:3000](http://localhost:3000).
-
 Variables dans `.env` (voir `.env.example`) :
 
-- `DATABASE_URL` — par défaut SQLite `file:./dev.db`
 - `NEXTAUTH_SECRET` — secret aléatoire
 - `NEXTAUTH_URL` — `http://localhost:3000`
 
-## Déploiement en ligne (Vercel + Neon)
+## Déploiement (une seule app Node)
 
-1. Crée une base Postgres gratuite sur [Neon](https://neon.tech)
-2. Dans `prisma/schema.prisma`, remplace le datasource :
+Vercel ne convient **pas** : le disque y est en lecture seule, donc les JSON ne peuvent pas être mis à jour.
 
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
+Déploie la même app Next.js sur un hébergeur avec disque persistant, par ex. [Railway](https://railway.app) ou [Render](https://render.com) :
 
-3. Mets à jour `DATABASE_URL` avec l’URL Neon (`postgresql://…?sslmode=require`)
-4. Lance `npx prisma migrate deploy`
-5. Pousse le repo sur GitHub, importe-le sur [Vercel](https://vercel.com)
-6. Ajoute les variables d’environnement Vercel :
-   - `DATABASE_URL`
-   - `NEXTAUTH_SECRET` (génère une longue chaîne aléatoire)
-   - `NEXTAUTH_URL` (URL de ton déploiement, ex. `https://selon-toi.vercel.app`)
-7. Déploie — l’app est en ligne
+1. Connecte le repo GitHub
+2. Build : `npm run build`
+3. Start : `npm start`
+4. Variables d’env :
+   - `NEXTAUTH_SECRET` (chaîne longue aléatoire)
+   - `NEXTAUTH_URL` (URL publique de l’app)
+
+Une seule app, pas de service Postgres/Neon à côté.
 
 ## Scripts
 
 | Commande | Description |
 | --- | --- |
-| `npm run dev` | Serveur de développement |
+| `npm run dev` | Développement |
 | `npm run build` | Build production |
 | `npm start` | Serveur production |
-| `npx prisma studio` | Explorer la base |

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { newId, updateRooms } from "@/lib/store";
 import { requireUser, getRoomForMember, serializeRoom } from "@/lib/rooms";
 
 type Params = { params: Promise<{ code: string }> };
@@ -15,8 +15,8 @@ export async function POST(request: Request, { params }: Params) {
   if ("error" in auth) return auth.error;
 
   const { code } = await params;
-  const room = await getRoomForMember(code, auth.user.id);
-  if (!room) {
+  const roomCheck = await getRoomForMember(code, auth.user.id);
+  if (!roomCheck) {
     return NextResponse.json({ error: "Room introuvable ou accès refusé." }, { status: 404 });
   }
 
@@ -26,43 +26,53 @@ export async function POST(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Choix invalide." }, { status: 400 });
   }
 
-  const question = room.questions.find((q) => q.id === parsed.data.questionId);
-  if (!question) {
-    return NextResponse.json({ error: "Question introuvable." }, { status: 404 });
-  }
-  if (question.phase !== "waiting_own") {
-    return NextResponse.json({ error: "Ce n'est plus la phase de choix secret." }, { status: 400 });
-  }
+  let errorMessage: string | null = null;
 
-  const existing = question.answers.find((a) => a.userId === auth.user.id);
-  if (existing?.ownChoice) {
-    return NextResponse.json({ error: "Tu as déjà répondu." }, { status: 400 });
-  }
+  await updateRooms((rooms) => {
+    const target = rooms.find((r) => r.code === code.toUpperCase());
+    if (!target) {
+      errorMessage = "Room introuvable.";
+      return null;
+    }
+    const question = target.questions.find((q) => q.id === parsed.data.questionId);
+    if (!question) {
+      errorMessage = "Question introuvable.";
+      return null;
+    }
+    if (question.phase !== "waiting_own") {
+      errorMessage = "Ce n'est plus la phase de choix secret.";
+      return null;
+    }
 
-  await prisma.answer.upsert({
-    where: {
-      questionId_userId: { questionId: question.id, userId: auth.user.id },
-    },
-    create: {
-      questionId: question.id,
-      userId: auth.user.id,
-      ownChoice: parsed.data.choice,
-    },
-    update: { ownChoice: parsed.data.choice },
+    let answer = question.answers.find((a) => a.userId === auth.user.id);
+    if (answer?.ownChoice) {
+      errorMessage = "Tu as déjà répondu.";
+      return null;
+    }
+    if (!answer) {
+      answer = {
+        id: newId(),
+        userId: auth.user.id,
+        ownChoice: parsed.data.choice,
+        guessChoice: null,
+      };
+      question.answers.push(answer);
+    } else {
+      answer.ownChoice = parsed.data.choice;
+    }
+
+    const bothReady =
+      target.members.length === 2 &&
+      target.members.every((m) =>
+        question.answers.some((a) => a.userId === m.userId && a.ownChoice)
+      );
+    if (bothReady) question.phase = "waiting_guess";
+
+    return target;
   });
 
-  const answers = await prisma.answer.findMany({ where: { questionId: question.id } });
-  const bothReady =
-    room.members.length === 2 &&
-    room.members.every((m) =>
-      answers.some((a) => a.userId === m.userId && a.ownChoice)
-    );
-
-  if (bothReady) {
-    await prisma.question.update({
-      where: { id: question.id },
-      data: { phase: "waiting_guess" },
-    });
+  if (errorMessage) {
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 
   const updated = await getRoomForMember(code, auth.user.id);

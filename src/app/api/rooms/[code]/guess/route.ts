@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { updateRooms } from "@/lib/store";
 import { requireUser, getRoomForMember, serializeRoom } from "@/lib/rooms";
 
 type Params = { params: Promise<{ code: string }> };
@@ -15,8 +15,8 @@ export async function POST(request: Request, { params }: Params) {
   if ("error" in auth) return auth.error;
 
   const { code } = await params;
-  const room = await getRoomForMember(code, auth.user.id);
-  if (!room) {
+  const roomCheck = await getRoomForMember(code, auth.user.id);
+  if (!roomCheck) {
     return NextResponse.json({ error: "Room introuvable ou accès refusé." }, { status: 404 });
   }
 
@@ -26,39 +26,48 @@ export async function POST(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Choix invalide." }, { status: 400 });
   }
 
-  const question = room.questions.find((q) => q.id === parsed.data.questionId);
-  if (!question) {
-    return NextResponse.json({ error: "Question introuvable." }, { status: 404 });
-  }
-  if (question.phase !== "waiting_guess") {
-    return NextResponse.json({ error: "Ce n'est pas encore la phase de guess." }, { status: 400 });
-  }
+  let errorMessage: string | null = null;
 
-  const myAnswer = question.answers.find((a) => a.userId === auth.user.id);
-  if (!myAnswer?.ownChoice) {
-    return NextResponse.json({ error: "Tu dois d'abord répondre pour toi." }, { status: 400 });
-  }
-  if (myAnswer.guessChoice) {
-    return NextResponse.json({ error: "Tu as déjà deviné." }, { status: 400 });
-  }
+  await updateRooms((rooms) => {
+    const target = rooms.find((r) => r.code === code.toUpperCase());
+    if (!target) {
+      errorMessage = "Room introuvable.";
+      return null;
+    }
+    const question = target.questions.find((q) => q.id === parsed.data.questionId);
+    if (!question) {
+      errorMessage = "Question introuvable.";
+      return null;
+    }
+    if (question.phase !== "waiting_guess") {
+      errorMessage = "Ce n'est pas encore la phase de guess.";
+      return null;
+    }
 
-  await prisma.answer.update({
-    where: { id: myAnswer.id },
-    data: { guessChoice: parsed.data.choice },
+    const myAnswer = question.answers.find((a) => a.userId === auth.user.id);
+    if (!myAnswer?.ownChoice) {
+      errorMessage = "Tu dois d'abord répondre pour toi.";
+      return null;
+    }
+    if (myAnswer.guessChoice) {
+      errorMessage = "Tu as déjà deviné.";
+      return null;
+    }
+
+    myAnswer.guessChoice = parsed.data.choice;
+
+    const bothReady =
+      target.members.length === 2 &&
+      target.members.every((m) =>
+        question.answers.some((a) => a.userId === m.userId && a.guessChoice)
+      );
+    if (bothReady) question.phase = "revealed";
+
+    return target;
   });
 
-  const answers = await prisma.answer.findMany({ where: { questionId: question.id } });
-  const bothReady =
-    room.members.length === 2 &&
-    room.members.every((m) =>
-      answers.some((a) => a.userId === m.userId && a.guessChoice)
-    );
-
-  if (bothReady) {
-    await prisma.question.update({
-      where: { id: question.id },
-      data: { phase: "revealed" },
-    });
+  if (errorMessage) {
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 
   const updated = await getRoomForMember(code, auth.user.id);

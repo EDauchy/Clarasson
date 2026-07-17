@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { createUser } from "@/lib/store";
 
 const schema = z.object({
   name: z.string().trim().min(2).max(40),
@@ -20,24 +20,21 @@ export async function POST(request: Request) {
       );
     }
 
-    const email = parsed.data.email.toLowerCase().trim();
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-      return NextResponse.json({ error: "Cet email est déjà utilisé." }, { status: 409 });
-    }
-
     const passwordHash = await bcrypt.hash(parsed.data.password, 10);
-    const user = await prisma.user.create({
-      data: {
-        name: parsed.data.name.trim(),
-        email,
-        passwordHash,
-      },
-      select: { id: true, email: true, name: true },
+    const user = await createUser({
+      name: parsed.data.name.trim(),
+      email: parsed.data.email,
+      passwordHash,
     });
 
-    return NextResponse.json({ user }, { status: 201 });
-  } catch {
+    return NextResponse.json(
+      { user: { id: user.id, email: user.email, name: user.name } },
+      { status: 201 }
+    );
+  } catch (error) {
+    if (error instanceof Error && error.message === "EMAIL_TAKEN") {
+      return NextResponse.json({ error: "Cet email est déjà utilisé." }, { status: 409 });
+    }
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

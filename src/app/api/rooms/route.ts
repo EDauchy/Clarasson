@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateInviteCode } from "@/lib/codes";
-import { prisma } from "@/lib/prisma";
+import { createRoom, findRoomByCode } from "@/lib/store";
 import { requireUser, serializeRoom, getRoomForMember } from "@/lib/rooms";
 
 export async function POST() {
@@ -9,19 +9,15 @@ export async function POST() {
 
   let code = generateInviteCode();
   for (let attempt = 0; attempt < 8; attempt++) {
-    const exists = await prisma.room.findUnique({ where: { code } });
+    const exists = await findRoomByCode(code);
     if (!exists) break;
     code = generateInviteCode();
   }
 
-  const room = await prisma.room.create({
-    data: {
-      code,
-      members: {
-        create: { userId: auth.user.id },
-      },
-    },
-  });
+  const room = await createRoom(code, auth.user.id);
+  if (!room) {
+    return NextResponse.json({ error: "Erreur création room" }, { status: 500 });
+  }
 
   const full = await getRoomForMember(room.code, auth.user.id);
   if (!full) {

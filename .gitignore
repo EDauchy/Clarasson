@@ -36,11 +36,9 @@ yarn-error.log*
 .env*.local
 !.env.example
 
-# local sqlite
-prisma/dev.db
-prisma/dev.db-journal
-*.db
-*.db-journal
+# runtime json data (keep starter files tracked via gitkeep pattern)
+# users/rooms are writable at runtime — ignore local changes if needed
+# data/*.json is committed empty as seed
 
 # vercel
 .vercel
@@ -49,4 +47,9 @@ prisma/dev.db-journal
 *.tsbuildinfo
 next-env.d.ts
 
-/src/generated/prisma
+# old prisma leftovers
+/prisma
+*.db
+*.db-journal
+/src/generated
+

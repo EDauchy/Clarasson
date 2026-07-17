@@ -1,7 +1,13 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+import {
+  findRoomByCode,
+  findUserById,
+  type AnswerRecord,
+  type QuestionRecord,
+  type RoomRecord,
+} from "@/lib/store";
 
 export async function requireUser() {
   const session = await getServerSession(authOptions);
@@ -11,29 +17,56 @@ export async function requireUser() {
   return { user: session.user };
 }
 
-export async function getRoomForMember(code: string, userId: string) {
-  const room = await prisma.room.findUnique({
-    where: { code: code.toUpperCase() },
-    include: {
-      members: {
-        include: { user: { select: { id: true, name: true, email: true } } },
-        orderBy: { joinedAt: "asc" },
-      },
-      questions: {
-        orderBy: { createdAt: "desc" },
-        take: 1,
-        include: {
-          answers: {
-            include: { user: { select: { id: true, name: true } } },
-          },
-        },
-      },
-    },
-  });
+export type EnrichedAnswer = AnswerRecord & { user: { id: string; name: string } };
+export type EnrichedQuestion = Omit<QuestionRecord, "answers"> & {
+  answers: EnrichedAnswer[];
+};
 
+export type RoomView = {
+  id: string;
+  code: string;
+  members: { userId: string; joinedAt: string; user: { id: string; name: string; email: string } }[];
+  questions: EnrichedQuestion[];
+};
+
+export async function getRoomForMember(
+  code: string,
+  userId: string
+): Promise<RoomView | null> {
+  const room = await findRoomByCode(code);
   if (!room) return null;
   if (!room.members.some((m) => m.userId === userId)) return null;
-  return room;
+
+  const members = [];
+  for (const m of [...room.members].sort((a, b) => a.joinedAt.localeCompare(b.joinedAt))) {
+    const user = await findUserById(m.userId);
+    if (!user) continue;
+    members.push({
+      userId: m.userId,
+      joinedAt: m.joinedAt,
+      user: { id: user.id, name: user.name, email: user.email },
+    });
+  }
+
+  const latest = [...room.questions].sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  const questions = latest
+    ? [
+        {
+          ...latest,
+          answers: await Promise.all(
+            latest.answers.map(async (a) => {
+              const user = await findUserById(a.userId);
+              return {
+                ...a,
+                user: { id: a.userId, name: user?.name ?? "?" },
+              };
+            })
+          ),
+        },
+      ]
+    : [];
+
+  return { id: room.id, code: room.code, members, questions };
 }
 
 export type PublicAnswer = {
@@ -45,10 +78,7 @@ export type PublicAnswer = {
   guessChoice?: string | null;
 };
 
-export function serializeRoom(
-  room: NonNullable<Awaited<ReturnType<typeof getRoomForMember>>>,
-  viewerId: string
-) {
+export function serializeRoom(room: RoomView, viewerId: string) {
   const question = room.questions[0] ?? null;
   const partner = room.members.find((m) => m.userId !== viewerId)?.user ?? null;
 
@@ -89,4 +119,8 @@ export function serializeRoom(
         }
       : null,
   };
+}
+
+export function getLatestQuestion(room: RoomRecord) {
+  return [...room.questions].sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0] ?? null;
 }

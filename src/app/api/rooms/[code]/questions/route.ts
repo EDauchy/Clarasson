@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
-import { requireUser, getRoomForMember, serializeRoom } from "@/lib/rooms";
+import { newId, updateRooms } from "@/lib/store";
+import { requireUser, getRoomForMember, serializeRoom, getLatestQuestion } from "@/lib/rooms";
 
 type Params = { params: Promise<{ code: string }> };
 
@@ -45,16 +45,27 @@ export async function POST(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Les deux options doivent être différentes." }, { status: 400 });
   }
 
-  await prisma.question.create({
-    data: {
-      roomId: room.id,
+  const updated = await updateRooms((rooms) => {
+    const target = rooms.find((r) => r.code === code.toUpperCase());
+    if (!target) return null;
+    const latest = getLatestQuestion(target);
+    if (latest && latest.phase !== "revealed") return null;
+    target.questions.push({
+      id: newId(),
       prompt: parsed.data.prompt?.trim() || "Tu préfères",
       optionA: parsed.data.optionA.trim(),
       optionB: parsed.data.optionB.trim(),
       phase: "waiting_own",
-    },
+      createdAt: new Date().toISOString(),
+      answers: [],
+    });
+    return target;
   });
 
-  const updated = await getRoomForMember(code, auth.user.id);
-  return NextResponse.json({ room: serializeRoom(updated!, auth.user.id) }, { status: 201 });
+  if (!updated) {
+    return NextResponse.json({ error: "Impossible de créer la question." }, { status: 400 });
+  }
+
+  const full = await getRoomForMember(code, auth.user.id);
+  return NextResponse.json({ room: serializeRoom(full!, auth.user.id) }, { status: 201 });
 }

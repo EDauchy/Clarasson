@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/prisma";
+import { findRoomByCode, updateRooms } from "@/lib/store";
 import { requireUser, getRoomForMember, serializeRoom } from "@/lib/rooms";
 
 const schema = z.object({
@@ -18,10 +18,7 @@ export async function POST(request: Request) {
   }
 
   const code = parsed.data.code.toUpperCase().replace(/\s+/g, "");
-  const room = await prisma.room.findUnique({
-    where: { code },
-    include: { members: true },
-  });
+  const room = await findRoomByCode(code);
 
   if (!room) {
     return NextResponse.json({ error: "Aucune room avec ce code." }, { status: 404 });
@@ -40,8 +37,13 @@ export async function POST(request: Request) {
     );
   }
 
-  await prisma.roomMember.create({
-    data: { roomId: room.id, userId: auth.user.id },
+  await updateRooms((rooms) => {
+    const target = rooms.find((r) => r.code === code);
+    if (!target) return null;
+    if (target.members.length >= 2) return null;
+    if (target.members.some((m) => m.userId === auth.user.id)) return target;
+    target.members.push({ userId: auth.user.id, joinedAt: new Date().toISOString() });
+    return target;
   });
 
   const full = await getRoomForMember(code, auth.user.id);
