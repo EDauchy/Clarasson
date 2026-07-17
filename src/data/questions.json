@@ -1,0 +1,502 @@
+[
+  {
+    "question": "Tu préfères",
+    "réponse1": "la montagne",
+    "réponse2": "la plage"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le café",
+    "réponse2": "le thé"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le cinéma",
+    "réponse2": "la série à la maison"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "voyager en train",
+    "réponse2": "voyager en avion"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "se lever tôt",
+    "réponse2": "se coucher tard"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le salé",
+    "réponse2": "le sucré"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "l'été",
+    "réponse2": "l'hiver"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "lire un livre",
+    "réponse2": "écouter un podcast"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "cuisiner",
+    "réponse2": "se faire livrer"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "la ville",
+    "réponse2": "la campagne"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "un chat",
+    "réponse2": "un chien"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le silence",
+    "réponse2": "la musique en fond"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une soirée entre amis",
+    "réponse2": "une soirée en solo"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le chocolat noir",
+    "réponse2": "le chocolat au lait"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "écrire à la main",
+    "réponse2": "taper sur un clavier"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "gagner au loto",
+    "réponse2": "trouver le job de rêve"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "être invisible",
+    "réponse2": "pouvoir voler"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le froid",
+    "réponse2": "la chaleur"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une pizza",
+    "réponse2": "un burger"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "planifier",
+    "réponse2": "improviser"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le sport en salle",
+    "réponse2": "le sport en extérieur"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une photo souvenir",
+    "réponse2": "un objet souvenir"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "parler",
+    "réponse2": "écouter"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le matin",
+    "réponse2": "le soir"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une comédie",
+    "réponse2": "un thriller"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "rester au même endroit",
+    "réponse2": "déménager souvent"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le vin",
+    "réponse2": "la bière"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "être célèbre",
+    "réponse2": "être anonyme et libre"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une journée pluvieuse",
+    "réponse2": "une journée ensoleillée"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le fromage",
+    "réponse2": "le dessert"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "appeler",
+    "réponse2": "envoyer un message"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "voyager près",
+    "réponse2": "voyager loin"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le rock",
+    "réponse2": "le jazz"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "gagner du temps",
+    "réponse2": "gagner de l'argent"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une maison",
+    "réponse2": "un appartement"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le passé",
+    "réponse2": "le futur"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "nager",
+    "réponse2": "marcher"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une playlist surprise",
+    "réponse2": "choisir chaque chanson"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le brunch",
+    "réponse2": "le dîner"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "travailler en équipe",
+    "réponse2": "travailler seul"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une surprise",
+    "réponse2": "savoir à l'avance"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le pain au chocolat",
+    "réponse2": "le croissant"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "voir un concert",
+    "réponse2": "voir un match"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "la mer",
+    "réponse2": "un lac"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "être trop ponctuel",
+    "réponse2": "arriver pile à l'heure"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le jeu de société",
+    "réponse2": "le jeu vidéo"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une robe / un costume",
+    "réponse2": "un jean et un t-shirt"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "apprendre une langue",
+    "réponse2": "apprendre un instrument"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le shopping en magasin",
+    "réponse2": "le shopping en ligne"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une lettre manuscrite",
+    "réponse2": "un long message vocal"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le sprint",
+    "réponse2": "le marathon"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "vivre sans réseaux sociaux",
+    "réponse2": "vivre sans télévision"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le sushi",
+    "réponse2": "les pâtes"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une nuit blanche",
+    "réponse2": "une grasse matinée"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le rouge",
+    "réponse2": "le bleu"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "conduire",
+    "réponse2": "être passager"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "un week-end culturel",
+    "réponse2": "un week-end farniente"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "la glace vanille",
+    "réponse2": "la glace chocolat"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "parler en public",
+    "réponse2": "écrire un discours"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le printemps",
+    "réponse2": "l'automne"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "garder un secret",
+    "réponse2": "tout raconter"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une tente",
+    "réponse2": "un hôtel"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le documentaire",
+    "réponse2": "la fiction"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "manger épicé",
+    "réponse2": "manger doux"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "avoir plus de courage",
+    "réponse2": "avoir plus de patience"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le vélo",
+    "réponse2": "la trottinette"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une playlist nostalgia",
+    "réponse2": "une playlist nouveautés"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "gagner une fois beaucoup",
+    "réponse2": "gagner souvent un peu"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le brunch du dimanche",
+    "réponse2": "l'apéro du vendredi"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "être trop organisé",
+    "réponse2": "être trop spontané"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "visiter un musée",
+    "réponse2": "se promener sans but"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le thé glacé",
+    "réponse2": "le soda"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une amitié de longue date",
+    "réponse2": "rencontrer plein de nouvelles personnes"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le yoga",
+    "réponse2": "la musculation"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "un road trip",
+    "réponse2": "un séjour fixe"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le silence absolu",
+    "réponse2": "le bruit de la ville"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une fondue",
+    "réponse2": "une raclette"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "rêver plus",
+    "réponse2": "agir plus"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le noir et blanc",
+    "réponse2": "la couleur"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une série courte",
+    "réponse2": "une longue saga"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le marché",
+    "réponse2": "le supermarché"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "danser",
+    "réponse2": "chanter"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "un bureau à domicile",
+    "réponse2": "un bureau en open space"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "la soupe",
+    "réponse2": "la salade"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "savoir cuisiner parfaitement",
+    "réponse2": "savoir photographier parfaitement"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une pluie d'été",
+    "réponse2": "une neige d'hiver"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le minimalisme",
+    "réponse2": "avoir beaucoup d'objets"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "un thriller psychologique",
+    "réponse2": "une romance"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le jus d'orange",
+    "réponse2": "le smoothie"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "gagner un débat",
+    "réponse2": "éviter le conflit"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une terrasse",
+    "réponse2": "un balcon"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le classique",
+    "réponse2": "l'électro"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "être le chef",
+    "réponse2": "être le second"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une escapade de 48h",
+    "réponse2": "des vacances de deux semaines"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le popcorn salé",
+    "réponse2": "le popcorn sucré"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une conversation profonde",
+    "réponse2": "une conversation légère"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le train de nuit",
+    "réponse2": "le vol de jour"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "avoir une mémoire parfaite",
+    "réponse2": "pouvoir tout oublier à volonté"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "le brunch salé",
+    "réponse2": "le brunch sucré"
+  },
+  {
+    "question": "Tu préfères",
+    "réponse1": "une playlist partagée",
+    "réponse2": "chacun ses écouteurs"
+  }
+]

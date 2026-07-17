@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Selon Toi
 
-## Getting Started
+Application web pour jouer à deux : chacun répond en secret à un « Tu préfères… », puis tente de deviner ce que l’autre préfère.
 
-First, run the development server:
+## Fonctionnalités
+
+- Inscription / connexion
+- Rooms à **2 personnes** max, via code d’invitation
+- Phases : choix secret → guess partenaire → révélation
+
+## Démarrage local
 
 ```bash
+npm install
+npx prisma migrate dev
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvre [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Variables dans `.env` (voir `.env.example`) :
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `DATABASE_URL` — par défaut SQLite `file:./dev.db`
+- `NEXTAUTH_SECRET` — secret aléatoire
+- `NEXTAUTH_URL` — `http://localhost:3000`
 
-## Learn More
+## Déploiement en ligne (Vercel + Neon)
 
-To learn more about Next.js, take a look at the following resources:
+1. Crée une base Postgres gratuite sur [Neon](https://neon.tech)
+2. Dans `prisma/schema.prisma`, remplace le datasource :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Mets à jour `DATABASE_URL` avec l’URL Neon (`postgresql://…?sslmode=require`)
+4. Lance `npx prisma migrate deploy`
+5. Pousse le repo sur GitHub, importe-le sur [Vercel](https://vercel.com)
+6. Ajoute les variables d’environnement Vercel :
+   - `DATABASE_URL`
+   - `NEXTAUTH_SECRET` (génère une longue chaîne aléatoire)
+   - `NEXTAUTH_URL` (URL de ton déploiement, ex. `https://selon-toi.vercel.app`)
+7. Déploie — l’app est en ligne
 
-## Deploy on Vercel
+## Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Commande | Description |
+| --- | --- |
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build production |
+| `npm start` | Serveur production |
+| `npx prisma studio` | Explorer la base |
